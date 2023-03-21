@@ -8,30 +8,69 @@ public class GameOver : MonoBehaviour
 {
     public GameObject panelGame;
     public GameObject panelGO;
-    public float health;
-    //public TMP_Text healtht;
-    //public GameObject prefab;
+    public GameObject ball;
+
+    public bool gameIsOver;
+
+    public int PlayerScoreL = 0;
+    public int PlayerScoreR = 0;
+
+    public TMP_Text txtPlayerScoreL;
+    public TMP_Text txtPlayerScoreR;
+
+    public static GameOver instance;
+
+    public void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        //health = 3;
+        gameIsOver = false;
+        txtPlayerScoreL.text = PlayerScoreL.ToString();
+        txtPlayerScoreR.text = PlayerScoreR.ToString();
         panelGame.SetActive(true);
         panelGO.SetActive(false);
     }
 
-    // Update is called once per frame
     void Update()
     {
-
+        if(PlayerScoreL == 30 || PlayerScoreR == 30)
+        {
+            gameIsOver = true;
+            GameOverCall();
+        }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void GameOverCall()
     {
-        if (collision.CompareTag("Ball"))
+        
+        panelGame.SetActive(false);
+        panelGO.SetActive(true);
+        Time.timeScale = 0;
+    }
+
+    public void Score(string wallID)
+    {
+        if (wallID == "Line L")
         {
-            panelGame.SetActive(false);
-            panelGO.SetActive(true);
+            PlayerScoreR = PlayerScoreR + 10;
+            txtPlayerScoreR.text = PlayerScoreR.ToString();
+        }
+        else
+        {
+            PlayerScoreL = PlayerScoreL + 10;
+            txtPlayerScoreL.text = PlayerScoreL.ToString();
+
         }
     }
 }
